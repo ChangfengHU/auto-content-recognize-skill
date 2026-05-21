@@ -41,6 +41,9 @@ fi
           exit 1
         fi
 
+        TOKEN="${TOKEN#Bearer }"
+        TOKEN="${TOKEN#bearer }"
+
 
 
         ENDPOINT=https://image-recognize.hb67egcim4.workers.dev
@@ -56,14 +59,14 @@ fi
         case "$MODE" in
                         url)
                 PAYLOAD=$(URL="${URL}" python3 -c 'import json, os; keys = ["url"]; data = {}; [data.__setitem__(key, os.environ.get(key.upper().replace("-", "_").replace(".", "_")) or os.environ.get(key.upper().replace("-", "_"))) for key in keys if (os.environ.get(key.upper().replace("-", "_").replace(".", "_")) or os.environ.get(key.upper().replace("-", "_")))]; print(json.dumps(data))')
-curl -fsSL "$ENDPOINT" "${COMMON_HEADERS[@]}" -H "Content-Type: application/json" -d "$PAYLOAD"
+curl --fail-with-body -sS -L "$ENDPOINT" "${COMMON_HEADERS[@]}" -H "Content-Type: application/json" -d "$PAYLOAD"
                   ;;
                 screenshot-url)
                 PAYLOAD=$(SCREENSHOT_URL="${SCREENSHOT_URL}" python3 -c 'import json, os; keys = ["screenshot_url"]; data = {}; [data.__setitem__(key, os.environ.get(key.upper().replace("-", "_").replace(".", "_")) or os.environ.get(key.upper().replace("-", "_"))) for key in keys if (os.environ.get(key.upper().replace("-", "_").replace(".", "_")) or os.environ.get(key.upper().replace("-", "_")))]; print(json.dumps(data))')
-curl -fsSL "$ENDPOINT" "${COMMON_HEADERS[@]}" -H "Content-Type: application/json" -d "$PAYLOAD"
+curl --fail-with-body -sS -L "$ENDPOINT" "${COMMON_HEADERS[@]}" -H "Content-Type: application/json" -d "$PAYLOAD"
                   ;;
             file)
-            curl -fsSL "$ENDPOINT" "${COMMON_HEADERS[@]}" \
+            curl --fail-with-body -sS -L "$ENDPOINT" "${COMMON_HEADERS[@]}" \
 -F "file=@${FILE}" \
 | cat
               ;;
